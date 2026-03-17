@@ -17,7 +17,15 @@
 
 ---
 
-## 📋 Technology Stack
+## � Project Showcase
+
+![EmoSense AI - About Page](images/emosense-ui.png)
+
+*Beautiful and intuitive interface showing system architecture, supported emotions, and technologies used.*
+
+---
+
+## �📋 Technology Stack
 
 | Component | Technology |
 |-----------|-----------|
