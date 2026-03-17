@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EmoSense AI — Facial Emotion Detection</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+  <!-- Our CSS -->
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="flash" id="flash"></div>
+
+<div class="wrapper">
+
+  <!-- ═══════════════ NAVBAR ═══════════════ -->
+  <nav>
+    <div class="nav-logo"><div class="logo-dot"></div>EmoSense AI</div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showPage('home',this)">Home</button>
+      <button class="nav-tab" onclick="showPage('detect',this)">Detection</button>
+      <button class="nav-tab" onclick="showPage('about',this)">About</button>
+    </div>
+    <div class="nav-actions">
+      <div class="api-status">
+        <div class="api-dot demo" id="apiDot"></div>
+        <span id="apiText">Demo Mode</span>
+      </div>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════ HOME PAGE ═══════════════ -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <div class="hero-badge"><span>●</span> AI-Powered · Real-Time · Full-Stack</div>
+      <h1>Detect Human<br/>Emotions with AI</h1>
+      <p>Full-stack web application using CNN to detect 7 facial emotions in real time. Backend: Flask + TensorFlow. Frontend: HTML/CSS/JS.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('detect',document.querySelectorAll('.nav-tab')[1])">▶ &nbsp;Start Detection</button>
+        <button class="btn-outline" onclick="showPage('about',document.querySelectorAll('.nav-tab')[2])">Learn How It Works</button>
+      </div>
+      <div class="hero-stats">
+        <div class="h-stat"><span class="h-stat-num">7</span><span class="h-stat-lbl">Emotions</span></div>
+        <div class="h-stat-div"></div>
+        <div class="h-stat"><span class="h-stat-num">35k+</span><span class="h-stat-lbl">Training Images</span></div>
+        <div class="h-stat-div"></div>
+        <div class="h-stat"><span class="h-stat-num">CNN</span><span class="h-stat-lbl">Deep Learning</span></div>
+        <div class="h-stat-div"></div>
+        <div class="h-stat"><span class="h-stat-num">Flask</span><span class="h-stat-lbl">REST API</span></div>
+      </div>
+      <div class="cards-grid">
+        <div class="card"><span class="card-icon">🧠</span><h3>CNN-Powered Model</h3><p>Deep CNN trained on FER2013 dataset with 35,887 labeled facial expression images across 7 emotion classes.</p></div>
+        <div class="card"><span class="card-icon">⚡</span><h3>Real-Time Detection</h3><p>OpenCV Haar Cascade detects faces frame-by-frame. Flask API returns predictions in under 50ms per face.</p></div>
+        <div class="card"><span class="card-icon">📊</span><h3>Live Analytics</h3><p>Confidence scores for all 7 emotions, session history log, pie chart, and downloadable report.</p></div>
+        <div class="card"><span class="card-icon">🌐</span><h3>Full-Stack Python</h3><p>Flask REST API backend + HTML/CSS/JS frontend. Runs entirely on your machine — no cloud required.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ DETECTION PAGE ═══════════════ -->
+  <div class="page" id="page-detect">
+
+    <!-- Demo mode banner -->
+    <div class="demo-banner" id="demoBanner">
+      ⚠️ &nbsp;<strong>Demo Mode:</strong> Simulated AI is running. To use real CNN predictions, start Flask server:
+      <code style="background:rgba(0,0,0,.3);padding:2px 8px;border-radius:4px;margin-left:6px;">python backend/app.py</code>
+    </div>
+
+    <div class="detect-grid">
+
+      <!-- Camera Column -->
+      <div class="cam-col">
+        <div class="cam-panel">
+          <div class="cam-header">
+            <div class="cam-title"><div class="status-dot" id="statusDot"></div>Live Camera Feed</div>
+            <span class="fps-label" id="fpsLabel">FPS: —</span>
+          </div>
+          <div class="cam-body">
+            <div class="cam-placeholder" id="camPlaceholder">
+              <svg class="cam-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                <path d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.895L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
+              </svg>
+              <p>Click <strong>Start Detection</strong> to begin</p>
+              <span class="ph-note">Camera permission required</span>
+            </div>
+            <video id="videoEl" autoplay muted playsinline></video>
+            <canvas id="canvasEl"></canvas>
+          </div>
+          <div class="cam-controls">
+            <button class="control-btn start-btn" id="startBtn" onclick="startDetection()">▶ &nbsp;Start Detection</button>
+            <button class="control-btn stop-btn"  id="stopBtn"  onclick="stopDetection()">■ &nbsp;Stop</button>
+            <button class="control-btn snap-btn"              onclick="takeSnapshot()" title="Screenshot">📸</button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">Detections</div></div>
+          <div class="stat-box"><div class="stat-num" id="statDom">—</div><div class="stat-lbl">Dominant</div></div>
+          <div class="stat-box"><div class="stat-num" id="statFaces">0</div><div class="stat-lbl">Faces</div></div>
+          <div class="stat-box"><div class="stat-num" id="statTime">0s</div><div class="stat-lbl">Session Time</div></div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="panel">
+          <div class="panel-title">Current Emotion</div>
+          <div class="emotion-big">
+            <span class="emotion-emoji" id="emotionEmoji">😶</span>
+            <div class="emotion-label" id="emotionLabel">Waiting...</div>
+            <div class="emotion-conf"  id="emotionConf">Start detection to see results</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Confidence Scores</div>
+          <div class="conf-bars" id="confBars"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Detection History</div>
+          <div class="history-list" id="historyList"><div class="empty-msg">No detections yet</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Session Distribution</div>
+          <div class="chart-wrap"><canvas id="emotionChart"></canvas></div>
+        </div>
+        <button class="download-btn" onclick="downloadReport()">⬇ &nbsp;Download Session Report</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ ABOUT PAGE ═══════════════ -->
+  <div class="page" id="page-about">
+    <div class="about-section">
+      <div class="section-tag">// Project Overview</div>
+      <h2 class="about-h2">Facial Emotion Recognition</h2>
+      <p class="about-p">A full-stack AI web application that detects and classifies 7 human facial emotions in real time using a CNN trained on FER2013. Backend: Python + Flask + TensorFlow. Frontend: HTML5 + CSS3 + JavaScript.</p>
+    </div>
+
+    <div class="about-section">
+      <div class="section-tag">// System Architecture</div>
+      <div class="arch-diagram">
+        <div class="arch-flow">
+          <div class="arch-node">👤 User</div><span class="arch-arrow">→</span>
+          <div class="arch-node">📷 Webcam<br/><small>getUserMedia API</small></div><span class="arch-arrow">→</span>
+          <div class="arch-node">🎞️ Video Frame<br/><small>Canvas capture</small></div><span class="arch-arrow">→</span>
+          <div class="arch-node">🔍 Face Detection<br/><small>Haar Cascade</small></div><span class="arch-arrow">→</span>
+          <div class="arch-node">⚙️ Preprocess<br/><small>Grayscale 48×48</small></div><span class="arch-arrow">→</span>
+          <div class="arch-node">🧠 CNN Model<br/><small>TensorFlow/Keras</small></div><span class="arch-arrow">→</span>
+          <div class="arch-node">📊 Prediction<br/><small>Emotion + Score</small></div><span class="arch-arrow">→</span>
+          <div class="arch-node">🖥️ UI Display</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <div class="section-tag">// Technologies Used</div>
+      <div class="tech-grid">
+        <div class="tech-card"><span class="tech-icon">🐍</span><div><div class="tech-name">Python 3.10</div><div class="tech-desc">Core backend language</div></div></div>
+        <div class="tech-card"><span class="tech-icon">🔶</span><div><div class="tech-name">TensorFlow/Keras</div><div class="tech-desc">CNN model training</div></div></div>
+        <div class="tech-card"><span class="tech-icon">👁️</span><div><div class="tech-name">OpenCV</div><div class="tech-desc">Face detection</div></div></div>
+        <div class="tech-card"><span class="tech-icon">🌶️</span><div><div class="tech-name">Flask</div><div class="tech-desc">REST API backend</div></div></div>
+        <div class="tech-card"><span class="tech-icon">🌐</span><div><div class="tech-name">HTML5/CSS3/JS</div><div class="tech-desc">Frontend interface</div></div></div>
+        <div class="tech-card"><span class="tech-icon">📦</span><div><div class="tech-name">FER2013</div><div class="tech-desc">35,887 images dataset</div></div></div>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <div class="section-tag">// Detectable Emotions</div>
+      <div class="emotion-grid">
+        <div class="emo-card" style="--ec:#22c55e"><span>😄</span><div>Happy</div></div>
+        <div class="emo-card" style="--ec:#3b82f6"><span>😢</span><div>Sad</div></div>
+        <div class="emo-card" style="--ec:#ef4444"><span>😠</span><div>Angry</div></div>
+        <div class="emo-card" style="--ec:#f59e0b"><span>😲</span><div>Surprise</div></div>
+        <div class="emo-card" style="--ec:#94a3b8"><span>😐</span><div>Neutral</div></div>
+        <div class="emo-card" style="--ec:#a855f7"><span>😨</span><div>Fear</div></div>
+        <div class="emo-card" style="--ec:#10b981"><span>🤢</span><div>Disgust</div></div>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <div class="section-tag">// How to Run (Full Stack)</div>
+      <div class="steps-list">
+        <div class="step"><span class="step-num">01</span><div><strong>Virtual Environment banao</strong><code>python -m venv venv</code></div></div>
+        <div class="step"><span class="step-num">02</span><div><strong>Activate karo</strong><code>venv\Scripts\activate     (Windows)
+source venv/bin/activate   (Mac/Linux)</code></div></div>
+        <div class="step"><span class="step-num">03</span><div><strong>Libraries install karo</strong><code>pip install -r requirements.txt</code></div></div>
+        <div class="step"><span class="step-num">04</span><div><strong>FER2013 Dataset download karo</strong><code>https://www.kaggle.com/datasets/msambare/fer2013</code></div></div>
+        <div class="step"><span class="step-num">05</span><div><strong>Model train karo (30-60 min)</strong><code>python src/train_model.py</code></div></div>
+        <div class="step"><span class="step-num">06</span><div><strong>Flask server start karo</strong><code>python backend/app.py</code></div></div>
+        <div class="step"><span class="step-num">07</span><div><strong>Browser mein kholo</strong><code>http://localhost:5000</code></div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<!-- Toast notification -->
+<div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg">Done!</span></div>
+
+<!-- Our JavaScript (load LAST — after DOM is ready) -->
+<script src="js/app.js"></script>
+</body>
+</html>

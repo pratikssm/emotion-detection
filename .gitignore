@@ -1,0 +1,80 @@
+# ═══════════════════════════════════════════════════════════════
+# EmoSense AI — .gitignore
+# Files and folders to exclude from GitHub
+# ═══════════════════════════════════════════════════════════════
+
+# ── VIRTUAL ENVIRONMENT ────────────────────────────────────────
+venv/
+env/
+ENV/
+.venv
+
+# ── PYTHON CACHE & COMPILED FILES ──────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ── DATABASE & SENSITIVE FILES ─────────────────────────────────
+users.db
+*.db
+*.sqlite
+*.sqlite3
+activity_log.txt
+*.log
+
+# ── LARGE ML MODEL FILES ───────────────────────────────────────
+# Users should train models locally
+emotion_model.h5
+*.h5
+*.pkl
+*.model
+
+# ── DATASET FOLDERS ────────────────────────────────────────────
+# Data is too large for GitHub (download/extract locally)
+data/train/
+data/test/
+
+# ── IDE & EDITOR FILES ─────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ── ENVIRONMENT VARIABLES ──────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── NODE MODULES (if using npm) ────────────────────────────────
+node_modules/
+package-lock.json
+
+# ── WINDOWS FILES ──────────────────────────────────────────────
+Thumbs.db
+*.lnk
+
+# ── TEMPORARY FILES ────────────────────────────────────────────
+*.tmp
+*.temp
+*.bak
+*.backup

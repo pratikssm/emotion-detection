@@ -1,0 +1,195 @@
+╔══════════════════════════════════════════════════════════════════╗
+║           EmoSense AI — VS Code Setup Guide                      ║
+║           Complete Step-by-Step (Hindi + English)                ║
+╚══════════════════════════════════════════════════════════════════╝
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  FOLDER STRUCTURE (Ye structure hona chahiye)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EmoSense-AI/
+├── frontend/
+│   ├── index.html          ← Main HTML page
+│   ├── css/
+│   │   └── style.css       ← All CSS styles
+│   └── js/
+│       └── app.js          ← All JavaScript
+│
+├── backend/
+│   └── app.py              ← Flask REST API
+│
+├── src/
+│   └── train_model.py      ← CNN training script
+│
+├── data/                   ← FER2013 dataset yahan aayega
+│   ├── train/
+│   │   ├── angry/
+│   │   ├── disgust/
+│   │   ├── fear/
+│   │   ├── happy/
+│   │   ├── neutral/
+│   │   ├── sad/
+│   │   └── surprise/
+│   └── test/
+│       └── (same folders)
+│
+└── requirements.txt        ← Python packages list
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 1 — VS Code mein folder open karo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. VS Code kholo
+2. File → Open Folder → "EmoSense-AI" folder select karo
+3. Sabhi files left sidebar mein dikhenge
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 2 — Python Virtual Environment
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VS Code mein Terminal kholo (Ctrl + ` )
+
+  # Virtual environment banao:
+  python -m venv venv
+
+  # Activate karo (Windows):
+  venv\Scripts\activate
+
+  # Activate karo (Mac/Linux):
+  source venv/bin/activate
+
+  # Terminal mein "(venv)" dikhega — sahi hai!
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 3 — Dependencies Install karo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  pip install -r requirements.txt
+
+  # Wait karo — 5-10 min lag sakta hai (TensorFlow bada hai)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 4 — FER2013 Dataset Download karo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Kaggle pe jao: https://www.kaggle.com/datasets/msambare/fer2013
+2. "Download" button dabao (free account chahiye)
+3. ZIP extract karo
+4. Folders ko EmoSense-AI/data/ mein copy karo:
+   - data/train/angry/    (sab images yahan)
+   - data/train/happy/    etc.
+   - data/test/angry/     etc.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 5 — Model Train karo (30-60 min)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  python src/train_model.py
+
+  # Training ke baad:
+  # src/emotion_model.h5 file ban jayegi ← yahi model hai
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 6 — Flask Server Start karo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  python backend/app.py
+
+  # Output dikhega:
+  # ╔══════════════════════════════════════╗
+  # ║    EmoSense AI — Flask Server        ║
+  # ║  API  → http://localhost:5000        ║
+  # ╚══════════════════════════════════════╝
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 7 — Frontend Kholo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Option A (Simple):
+  frontend/index.html → Right click → "Open with Live Server"
+  (VS Code mein "Live Server" extension install karo pehle)
+
+Option B (Direct):
+  frontend/index.html ko browser mein drag-and-drop karo
+
+  ⚠️ IMPORTANT: Flask server ZAROOR chalu rehna chahiye
+     (Step 6 wala terminal band mat karo!)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  FILES KA CONNECTION (Kaise jude hain?)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+index.html
+  ├── <link href="css/style.css">     ← CSS connect hai (line 10)
+  └── <script src="js/app.js">        ← JS connect hai (last line)
+
+app.js
+  └── fetch('http://localhost:5000/predict')  ← Flask se baat karta hai
+
+backend/app.py
+  └── localhost:5000/predict endpoint → model se predict karta hai
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  DEMO MODE (Bina Flask ke bhi chalta hai!)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Agar Flask server start nahi kiya:
+  → App automatically Demo Mode mein chala jayega
+  → Simulated emotions dikhega (real camera ke saath)
+  → Yellow banner dikhega "Demo Mode"
+  → Sab features kaam karenge (minus real AI predictions)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  COMMON ERRORS & FIX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Error: "Camera permission denied"
+  Fix: Browser settings → Camera → Allow for localhost
+
+Error: "ModuleNotFoundError: flask"
+  Fix: pip install -r requirements.txt (venv activate hona chahiye)
+
+Error: "Model not found"
+  Fix: Pehle python src/train_model.py run karo
+
+Error: CORS error in browser console
+  Fix: flask-cors install hona chahiye (requirements mein hai)
+
+Error: "data/train not found"
+  Fix: FER2013 dataset download kar ke data/ folder mein daalo
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  VS CODE RECOMMENDED EXTENSIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Live Server       — HTML files browser mein open karo
+• Python            — Python support
+• Pylance           — Python intellisense
+• Prettier          — Code formatting
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  QUICK START SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Terminal 1 (Flask):
+  cd EmoSense-AI
+  venv\Scripts\activate
+  python backend/app.py
+
+Browser:
+  Open frontend/index.html → Detection tab → Start Detection
+
+That's it! 🎉
