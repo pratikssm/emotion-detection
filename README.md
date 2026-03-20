@@ -19,9 +19,18 @@
 
 ## � Project Showcase
 
-![EmoSense AI - About Page](images/emosense-ui.png)
+### Screenshots
 
-*Beautiful and intuitive interface showing system architecture, supported emotions, and technologies used.*
+#### Home Page
+![EmoSense AI - Home Page](Images/Screenshot%202026-03-17%20105637.png)
+
+#### Detection Interface
+![EmoSense AI - Detection](Images/Screenshot%202026-03-17%20105710.png)
+
+#### About & Features
+![EmoSense AI - About Page](Images/Screenshot%202026-03-17%20105735.png)
+
+*Beautiful and intuitive interface showing real-time emotion detection, confidence scores, and system architecture.*
 
 ---
 
